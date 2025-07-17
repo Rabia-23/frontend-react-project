@@ -22,6 +22,9 @@ function Header() {
    const dispatch = useDispatch();
 
    const {products} = useSelector((store) => store.cart);
+   const totalItems = products.reduce((sum, p) => sum + p.counter, 0);
+
+   // theme
    const isLight = useSelector((store) => store.theme.isLight);
 
    // search bar states

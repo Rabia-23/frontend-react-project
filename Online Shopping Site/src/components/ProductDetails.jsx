@@ -7,8 +7,11 @@ import { addToCart, calculateCart } from '../redux/slices/cartSlice';
 
 function ProductDetails() {
    const dispatch = useDispatch();
-   const { id } = useParams();
+   const { id: paramId } = useParams();
+   const id = Number(paramId);
+
    const { products, selectedProduct, loading } = useSelector((store) => store.product);
+   const cartProduct = useSelector(state => state.cart.products.find(p => p.id == id));
    const isLight = useSelector((store) => store.theme.isLight);
 
    const { price = 0, image, title, description } = selectedProduct;
@@ -22,16 +25,20 @@ function ProductDetails() {
    };
 
    const addCart = () => {
+      if (counter === 0) return; // 0 adet ekleme
+
       const payload = {
          id,
          price,
          image,
          title,
          description,
-         counter
+         counter, // sadece yeni eklenen miktar
       };
+
       dispatch(addToCart(payload));
       dispatch(calculateCart());
+      setCounter(0); // opsiyonel: ekledikten sonra sayaç sıfırlanabilir
    };
 
    useEffect(() => {

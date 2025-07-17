@@ -24,22 +24,24 @@ export const cartSlice = createSlice({
    initialState,
    reducers: {
       addToCart: (state, action) => {
-         const findProduct = state.products && state.products.find((product) => product.id === action.payload.id);
-          if (findProduct) { // daha onceden eklenmistir
-            // olan urunu cikar
-            const extractedProducts = state.products.filter((product)=> product.id != action.payload.id)
-            // olan urun uzerinden guncelleme yap -> count arttir
-            findProduct.counter += action.payload.counter;
-            // local storage'a olan urunun guncellenmis halini ve cikarilmi slisteyi birlestirerek ekle boylelikle liste guncellenmis olur
-            state.products = [...extractedProducts, findProduct];
-            writeFromCartToStorage(state.products);
-          }
-          else { // daha once eklenmemistir
-            // yeni urun ile ile onceki urunler birlestirilip yeni liste olustururlur, local storage'a yazilir boylelikle liste guncellenmis olur
-            state.products = [...state.products, action.payload];
-            writeFromCartToStorage(state.products);
-          }
+         const productIndex = state.products.findIndex(p => p.id === action.payload.id);
+         if (productIndex >= 0) {
+            const updatedProduct = {
+               ...state.products[productIndex],
+               counter: state.products[productIndex].counter + action.payload.counter,
+            };
+            state.products = [
+               ...state.products.slice(0, productIndex),
+               updatedProduct,
+               ...state.products.slice(productIndex + 1)
+            ];
+         } else {
+            state.products.push(action.payload);
+         }
+         writeFromCartToStorage(state.products);
       },
+      
+       
 
       deleteFromCart: (state, action) => {
          const newProducts = state.products.filter(

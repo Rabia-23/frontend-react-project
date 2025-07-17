@@ -52,7 +52,7 @@ function App() {
                })
             }
             <div>
-               <h3 style={{marginLeft: '213px', marginTop: "37px", color: "rgb(63, 46, 62)"}}>Total Amount: {totalAmount.toFixed(2)} TL</h3>
+               <h3 className="drawer_total">Total Amount: {totalAmount.toFixed(2)} TL</h3>
             </div>
             </Drawer>
       </div>
